@@ -8,7 +8,7 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      gitUser: { },      
+      gitUser: {},      
       followers: [],      
     };
   }
@@ -30,30 +30,38 @@ export default class App extends Component {
     Axios.get(`https://api.github.com/users/Valeriusdev`)
 
       .then((res) => {
-        console.log(res.data)
+        console.log('github user', res.data)
         this.setState({
           gitUser: res.data,
-        });
+        })
+        // we're not using catch after this one. it's not going to work
+
         Axios.get(`https://api.github.com/users/Valeriusdev/followers`)
         .then((res)=> {
-          console.log(res)
+          console.log('github followers', res)
           this.setState({
-            followers: res.data
+            followers: res.data            
           })
         })
-      })
-      .catch((err) => {
-        console.log("error: ", err);
-      });  
-    }
+        .catch((err) => {
+          console.log("Couldn't get followers error: ", err);
+        });       
+       
+    })
+    .catch((err) => {
+      console.log("Couldn't get followers error: ", err);
+    }); 
+  }  
 
   render(){
 
     return(
     <div> 
-      <h3> {this.state.gitUser.login} </h3>
-      <p>  { this.state.gitUser.name }</p>
-      {this.state.followers.map(item => <Card follower = {item} /> ) } 
+      <div className='card'>
+        <h3> {this.state.gitUser.login} </h3>      
+        <p>  {this.state.gitUser.name}</p>
+      </div>
+      {this.state.followers.map(item => <Card follower = {item} /> ) }      
     </div>
     )
 
